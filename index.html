@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kronobus — Gestion des horaires professionnels</title>
+<meta name="description" content="L'application de suivi des horaires pour les professionnels en horaires variables. Pointage, rapports, heures supplémentaires.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+<style>
+:root {
+  --blue: #1b2cc1;
+  --blue-dark: #1425a8;
+  --blue-light: #eef1ff;
+  --blue-mid: #3d50d4;
+  --ink: #0f1117;
+  --ink-mid: #3a3d4a;
+  --ink-light: #6b6f82;
+  --ink-ghost: #a8abc0;
+  --surface: #ffffff;
+  --surface-2: #f7f8fc;
+  --surface-3: #f0f2fa;
+  --border: rgba(27,44,193,.12);
+  --border-strong: rgba(27,44,193,.25);
+  --radius: 14px;
+  --radius-lg: 22px;
+  --radius-xl: 32px;
+  --font-display: 'DM Serif Display', Georgia, serif;
+  --font-body: 'DM Sans', sans-serif;
+  --max: 1100px;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--font-body);
+  color: var(--ink);
+  background: var(--surface);
+  font-size: 16px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── LANG TOGGLE ── */
+.lang-bar {
+  position: fixed; top: 0; left: 0; right: 0;
+  z-index: 100;
+  background: rgba(255,255,255,.92);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 32px; height: 52px;
+}
+.lang-logo {
+  display: flex; align-items: center; gap: 10px;
+  font-family: var(--font-body); font-weight: 600; font-size: 17px;
+  color: var(--ink); text-decoration: none;
+}
+.lang-logo-k {
+  width: 32px; height: 32px; background: var(--blue);
+  border-radius: 9px; display: flex; align-items: center; justify-content: center;
+  font-style: italic; font-weight: 700; color: #fff; font-size: 18px;
+}
+.lang-nav { display: flex; align-items: center; gap: 24px; }
+.lang-nav a {
+  font-size: 14px; font-weight: 500; color: var(--ink-mid);
+  text-decoration: none; transition: color .2s;
+}
+.lang-nav a:hover { color: var(--blue); }
+.lang-toggle {
+  display: flex; gap: 2px;
+  background: var(--surface-3); border-radius: 8px; padding: 3px;
+}
+.lang-btn {
+  padding: 4px 12px; border-radius: 6px; border: none; background: none;
+  font-family: var(--font-body); font-size: 13px; font-weight: 500;
+  color: var(--ink-light); cursor: pointer; transition: all .2s;
+}
+.lang-btn.active {
+  background: var(--blue); color: #fff;
+}
+.cta-nav {
+  background: var(--blue); color: #fff !important;
+  padding: 8px 18px; border-radius: 8px; font-size: 14px !important;
+  font-weight: 600 !important; transition: background .2s !important;
+}
+.cta-nav:hover { background: var(--blue-dark) !important; color: #fff !important; }
+
+/* ── HERO ── */
+.hero {
+  padding: 140px 32px 80px;
+  max-width: var(--max); margin: 0 auto;
+  display: grid; grid-template-columns: 1fr 420px; gap: 60px; align-items: center;
+}
+.hero-badge {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: var(--blue-light); color: var(--blue);
+  font-size: 13px; font-weight: 600; padding: 6px 14px;
+  border-radius: 99px; margin-bottom: 24px;
+  border: 1px solid rgba(27,44,193,.2);
+}
+.hero-badge-dot {
+  width: 7px; height: 7px; border-radius: 50%;
+  background: var(--blue); animation: pulse 2s infinite;
+}
+@keyframes pulse {
+  0%,100% { opacity: 1; transform: scale(1); }
+  50% { opacity: .5; transform: scale(.8); }
+}
+.hero h1 {
+  font-family: var(--font-display); font-size: clamp(36px, 5vw, 58px);
+  line-height: 1.08; font-weight: 400; color: var(--ink);
+  margin-bottom: 20px; letter-spacing: -.5px;
+}
+.hero h1 em {
+  font-style: italic; color: var(--blue);
+}
+.hero-desc {
+  font-size: 18px; color: var(--ink-mid); line-height: 1.65;
+  margin-bottom: 36px; max-width: 520px;
+}
+.hero-actions { display: flex; gap: 12px; flex-wrap: wrap; }
+.btn-primary {
+  background: var(--blue); color: #fff;
+  padding: 14px 28px; border-radius: var(--radius);
+  font-family: var(--font-body); font-size: 15px; font-weight: 600;
+  text-decoration: none; display: inline-flex; align-items: center; gap: 8px;
+  transition: background .2s, transform .15s;
+  border: none; cursor: pointer;
+}
+.btn-primary:hover { background: var(--blue-dark); transform: translateY(-1px); }
+.btn-secondary {
+  background: transparent; color: var(--ink);
+  padding: 14px 24px; border-radius: var(--radius);
+  font-family: var(--font-body); font-size: 15px; font-weight: 500;
+  text-decoration: none; display: inline-flex; align-items: center; gap: 8px;
+  transition: background .2s; border: 1.5px solid var(--border-strong);
+}
+.btn-secondary:hover { background: var(--surface-3); }
+.hero-trust {
+  margin-top: 32px; display: flex; align-items: center; gap: 16px;
+}
+.hero-trust-text { font-size: 13px; color: var(--ink-ghost); }
+.hero-stars { color: #f5a623; font-size: 14px; letter-spacing: 1px; }
+
+/* ── PHONE MOCKUP ── */
+.phone-outer {
+  width: 280px; margin: 0 auto;
+  background: #0f1117; border-radius: 46px;
+  padding: 14px 10px; box-shadow: 0 40px 80px rgba(15,17,23,.25), 0 0 0 1px rgba(255,255,255,.06);
+  position: relative;
+}
+.phone-notch {
+  width: 80px; height: 8px; background: #1a1a2e;
+  border-radius: 4px; margin: 0 auto 10px;
+}
+.phone-screen {
+  background: #f5f5f7; border-radius: 36px; overflow: hidden;
+}
+.ph-statusbar {
+  background: #1b2cc1; padding: 8px 14px 0;
+  display: flex; justify-content: space-between; align-items: center;
+}
+.ph-time { color: #fff; font-size: 10px; font-weight: 600; }
+.ph-icons { color: rgba(255,255,255,.7); font-size: 9px; }
+.ph-header {
+  background: #1b2cc1; padding: 10px 14px 14px;
+  display: flex; justify-content: space-between; align-items: center;
+}
+.ph-name { color: #fff; font-size: 11px; font-weight: 700; }
+.ph-toggle {
+  background: rgba(255,255,255,.18); border-radius: 99px;
+  padding: 3px 9px; font-size: 9px; color: #fff; font-weight: 600;
+}
+.ph-body { padding: 10px; }
+.ph-total-card {
+  background: #fff; border-radius: 14px; padding: 12px;
+  display: flex; gap: 12px; align-items: center;
+  margin-bottom: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,.06);
+}
+.ph-circles { display: flex; gap: 8px; }
+.ph-circle-wrap { text-align: center; }
+.ph-circle-lbl { font-size: 7px; font-weight: 700; color: #6e6e73; margin-top: 2px; }
+.ph-right { flex: 1; }
+.ph-right-title { font-size: 8px; font-weight: 800; color: #1d1d1f; margin-bottom: 4px; }
+.ph-stat { display: flex; justify-content: space-between; margin-bottom: 2px; }
+.ph-slbl { font-size: 8px; color: #6e6e73; font-weight: 600; }
+.ph-sval { font-size: 8px; font-weight: 700; color: #1d1d1f; }
+.ph-sval.green { color: #1b2cc1; }
+.ph-day-row {
+  background: #fff; border-radius: 10px; padding: 8px 10px;
+  display: flex; align-items: center; gap: 8px;
+  margin-bottom: 6px;
+  box-shadow: 0 1px 4px rgba(0,0,0,.05);
+}
+.ph-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.ph-day-info { flex: 1; }
+.ph-day-time { font-size: 8px; color: #6e6e73; }
+.ph-day-dur { font-size: 9px; font-weight: 700; color: #1d1d1f; }
+.ph-sup-card {
+  background: #eef1ff; border-radius: 10px; padding: 8px 10px;
+  display: flex; justify-content: space-between; align-items: center;
+  border: 1px solid rgba(27,44,193,.15);
+}
+.ph-sup-lbl { font-size: 8px; color: #1b2cc1; font-weight: 700; }
+.ph-sup-val { font-size: 14px; font-weight: 800; color: #1b2cc1; }
+
+/* ── SECTION WRAPPER ── */
+section { padding: 80px 32px; }
+.container { max-width: var(--max); margin: 0 auto; }
+.section-tag {
+  display: inline-block; font-size: 12px; font-weight: 700;
+  letter-spacing: .8px; text-transform: uppercase; color: var(--blue);
+  margin-bottom: 12px;
+}
+.section-title {
+  font-family: var(--font-display); font-size: clamp(28px, 4vw, 44px);
+  line-height: 1.1; font-weight: 400; color: var(--ink);
+  margin-bottom: 16px; letter-spacing: -.3px;
+}
+.section-sub {
+  font-size: 17px; color: var(--ink-mid); max-width: 560px;
+  line-height: 1.65; margin-bottom: 48px;
+}
+
+/* ── MÉTIERS ── */
+.metiers-bg { background: var(--surface-2); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+.metiers-grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 16px;
+}
+.metier-card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 24px 20px;
+  text-align: center; transition: border-color .2s, transform .2s;
+}
+.metier-card:hover { border-color: var(--blue-mid); transform: translateY(-2px); }
+.metier-icon {
+  font-size: 28px; margin-bottom: 12px; display: block;
+}
+.metier-name { font-size: 14px; font-weight: 600; color: var(--ink); margin-bottom: 4px; }
+.metier-sub { font-size: 12px; color: var(--ink-ghost); }
+
+/* ── FONCTIONNALITÉS ── */
+.feats-grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1px;
+  background: var(--border); border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden;
+}
+.feat {
+  background: var(--surface); padding: 32px;
+  transition: background .2s;
+}
+.feat:hover { background: var(--surface-2); }
+.feat-icon {
+  width: 44px; height: 44px; border-radius: 12px;
+  background: var(--blue-light); display: flex; align-items: center;
+  justify-content: center; font-size: 20px; margin-bottom: 16px;
+}
+.feat h3 { font-size: 16px; font-weight: 600; color: var(--ink); margin-bottom: 8px; }
+.feat p { font-size: 14px; color: var(--ink-mid); line-height: 1.6; }
+
+/* ── TARIFS ── */
+.pricing-bg { background: var(--ink); }
+.pricing-bg .section-title { color: #fff; }
+.pricing-bg .section-sub { color: rgba(255,255,255,.6); }
+.pricing-bg .section-tag { color: rgba(255,255,255,.5); }
+.pricing-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 24px;
+}
+.pricing-card {
+  background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.1);
+  border-radius: var(--radius-lg); padding: 36px; position: relative;
+  transition: border-color .2s;
+}
+.pricing-card.featured {
+  border-color: var(--blue-mid); background: rgba(27,44,193,.2);
+}
+.pricing-badge {
+  position: absolute; top: -12px; left: 50%; transform: translateX(-50%);
+  background: var(--blue); color: #fff;
+  font-size: 11px; font-weight: 700; padding: 4px 16px;
+  border-radius: 99px; white-space: nowrap; letter-spacing: .3px;
+}
+.pricing-type { font-size: 12px; font-weight: 700; color: rgba(255,255,255,.4); letter-spacing: .8px; text-transform: uppercase; margin-bottom: 8px; }
+.pricing-name { font-family: var(--font-display); font-size: 28px; color: #fff; margin-bottom: 20px; }
+.pricing-price {
+  display: flex; align-items: baseline; gap: 6px; margin-bottom: 6px;
+}
+.pricing-amount { font-size: 42px; font-weight: 700; color: #fff; line-height: 1; }
+.pricing-period { font-size: 14px; color: rgba(255,255,255,.5); }
+.pricing-annual { font-size: 13px; color: rgba(255,255,255,.4); margin-bottom: 28px; }
+.pricing-annual strong { color: rgba(255,255,255,.7); }
+.pricing-divider { height: 1px; background: rgba(255,255,255,.1); margin-bottom: 24px; }
+.pricing-features { list-style: none; display: flex; flex-direction: column; gap: 12px; margin-bottom: 32px; }
+.pricing-features li {
+  display: flex; align-items: flex-start; gap: 10px;
+  font-size: 14px; color: rgba(255,255,255,.8); line-height: 1.5;
+}
+.check {
+  width: 18px; height: 18px; border-radius: 50%;
+  background: rgba(27,44,193,.4); border: 1px solid rgba(27,44,193,.6);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; margin-top: 1px;
+}
+.check::after {
+  content: ''; width: 5px; height: 8px;
+  border-right: 1.5px solid #fff; border-bottom: 1.5px solid #fff;
+  transform: rotate(40deg) translate(-1px,-1px);
+}
+.pricing-cta {
+  width: 100%; padding: 14px; border-radius: var(--radius);
+  font-family: var(--font-body); font-size: 15px; font-weight: 600;
+  cursor: pointer; transition: all .2s; border: none; text-align: center;
+  display: block; text-decoration: none;
+}
+.pricing-cta.primary { background: var(--blue); color: #fff; }
+.pricing-cta.primary:hover { background: var(--blue-mid); }
+.pricing-cta.secondary {
+  background: transparent; color: rgba(255,255,255,.8);
+  border: 1.5px solid rgba(255,255,255,.2);
+}
+.pricing-cta.secondary:hover { border-color: rgba(255,255,255,.5); background: rgba(255,255,255,.05); }
+.pricing-note { font-size: 12px; color: rgba(255,255,255,.35); text-align: center; margin-top: 28px; }
+
+/* ── PWA INSTALL ── */
+.pwa-section { background: var(--blue-light); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+.pwa-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center; }
+.pwa-step { display: flex; gap: 16px; margin-bottom: 24px; }
+.pwa-num {
+  width: 32px; height: 32px; border-radius: 50%; background: var(--blue);
+  color: #fff; font-size: 13px; font-weight: 700;
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+.pwa-step-body h4 { font-size: 15px; font-weight: 600; margin-bottom: 4px; }
+.pwa-step-body p { font-size: 13px; color: var(--ink-mid); line-height: 1.5; }
+.pwa-devices {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 12px;
+}
+.pwa-device-card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 20px;
+}
+.pwa-device-icon { font-size: 28px; margin-bottom: 8px; }
+.pwa-device-name { font-size: 14px; font-weight: 600; margin-bottom: 4px; }
+.pwa-device-desc { font-size: 12px; color: var(--ink-ghost); line-height: 1.5; }
+
+/* ── FOOTER ── */
+footer {
+  background: var(--ink); color: rgba(255,255,255,.5);
+  padding: 48px 32px 32px;
+}
+.footer-inner {
+  max-width: var(--max); margin: 0 auto;
+  display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 40px;
+  margin-bottom: 40px;
+}
+.footer-logo { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+.footer-logo-k {
+  width: 36px; height: 36px; background: var(--blue);
+  border-radius: 10px; display: flex; align-items: center; justify-content: center;
+  font-style: italic; font-weight: 700; color: #fff; font-size: 20px;
+}
+.footer-logo-name { font-size: 18px; font-weight: 600; color: #fff; }
+.footer-desc { font-size: 13px; line-height: 1.7; max-width: 280px; }
+.footer-col h4 { font-size: 13px; font-weight: 600; color: rgba(255,255,255,.8); margin-bottom: 14px; }
+.footer-col a {
+  display: block; font-size: 13px; color: rgba(255,255,255,.4);
+  text-decoration: none; margin-bottom: 8px; transition: color .2s;
+}
+.footer-col a:hover { color: rgba(255,255,255,.8); }
+.footer-bottom {
+  max-width: var(--max); margin: 0 auto;
+  border-top: 1px solid rgba(255,255,255,.08); padding-top: 24px;
+  display: flex; justify-content: space-between; align-items: center;
+  font-size: 12px;
+}
+.footer-bottom-links { display: flex; gap: 20px; }
+.footer-bottom-links a { color: rgba(255,255,255,.3); text-decoration: none; }
+.footer-bottom-links a:hover { color: rgba(255,255,255,.6); }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 768px) {
+  .hero { grid-template-columns: 1fr; padding: 100px 20px 60px; gap: 40px; }
+  .phone-outer { display: none; }
+  .pricing-grid { grid-template-columns: 1fr; }
+  .pwa-grid { grid-template-columns: 1fr; }
+  .footer-inner { grid-template-columns: 1fr; }
+  .lang-nav { display: none; }
+  section { padding: 60px 20px; }
+  .lang-bar { padding: 0 20px; }
+}
+
+/* ── ANIMATIONS ── */
+.fade-in {
+  opacity: 0; transform: translateY(20px);
+  animation: fadeIn .6s ease forwards;
+}
+@keyframes fadeIn {
+  to { opacity: 1; transform: translateY(0); }
+}
+.hero-left > * { opacity: 0; transform: translateY(24px); animation: fadeIn .6s ease forwards; }
+.hero-left > *:nth-child(1) { animation-delay: .1s; }
+.hero-left > *:nth-child(2) { animation-delay: .2s; }
+.hero-left > *:nth-child(3) { animation-delay: .3s; }
+.hero-left > *:nth-child(4) { animation-delay: .4s; }
+.hero-left > *:nth-child(5) { animation-delay: .5s; }
+.hero-right { opacity: 0; transform: translateX(30px); animation: fadeIn .8s .3s ease forwards; }
+</style>
+</head>
+<body>
+
+<!-- ── NAV ── -->
+<nav class="lang-bar">
+  <a href="#" class="lang-logo">
+    <div class="lang-logo-k">K</div>
+    Kronobus
+  </a>
+  <div class="lang-nav">
+    <a href="#metiers" data-fr="Métiers" data-en="Industries">Métiers</a>
+    <a href="#fonctionnalites" data-fr="Fonctionnalités" data-en="Features">Fonctionnalités</a>
+    <a href="#tarifs" data-fr="Tarifs" data-en="Pricing">Tarifs</a>
+    <a href="#installer" data-fr="Installer" data-en="Install">Installer</a>
+    <a href="https://kronobus.vercel.app" class="cta-nav" data-fr="Essai gratuit 14 jours" data-en="Start free trial">Essai gratuit 14 jours</a>
+  </div>
+  <div style="display:flex;align-items:center;gap:12px">
+    <div class="lang-toggle">
+      <button class="lang-btn active" onclick="setLang('fr')">FR</button>
+      <button class="lang-btn" onclick="setLang('en')">EN</button>
+    </div>
+  </div>
+</nav>
+
+<!-- ── HERO ── -->
+<section style="padding:0">
+  <div class="hero">
+    <div class="hero-left">
+      <div class="hero-badge">
+        <span class="hero-badge-dot"></span>
+        <span data-fr="Application PWA — aucune installation requise" data-en="PWA App — no installation required">Application PWA — aucune installation requise</span>
+      </div>
+      <h1 data-fr="Le suivi d'horaires pensé pour les <em>professionnels du terrain</em>" data-en="Time tracking designed for <em>field professionals</em>">Le suivi d'horaires pensé pour les <em>professionnels du terrain</em></h1>
+      <p class="hero-desc" data-fr="Pointage précis, rapports automatiques, heures supplémentaires calculées en temps réel. Conçu pour les conducteurs, soignants et tous les métiers en horaires décalés." data-en="Precise time tracking, automatic reports, overtime calculated in real time. Designed for drivers, healthcare workers, and all shift-based professionals.">Pointage précis, rapports automatiques, heures supplémentaires calculées en temps réel. Conçu pour les conducteurs, soignants et tous les métiers en horaires décalés.</p>
+      <div class="hero-actions">
+        <a href="https://kronobus.vercel.app" class="btn-primary">
+          <span data-fr="Démarrer l'essai gratuit" data-en="Start free trial">Démarrer l'essai gratuit</span>
+          →
+        </a>
+        <a href="#tarifs" class="btn-secondary" data-fr="Voir les tarifs" data-en="See pricing">Voir les tarifs</a>
+      </div>
+      <div class="hero-trust">
+        <div class="hero-stars">★★★★★</div>
+        <span class="hero-trust-text" data-fr="14 jours d'essai gratuit — sans carte bancaire" data-en="14-day free trial — no credit card required">14 jours d'essai gratuit — sans carte bancaire</span>
+      </div>
+    </div>
+    <div class="hero-right">
+      <div class="phone-outer">
+        <div class="phone-notch"></div>
+        <div class="phone-screen">
+          <div class="ph-statusbar">
+            <span class="ph-time">09:42</span>
+            <span class="ph-icons">●●● 100%</span>
+          </div>
+          <div class="ph-header">
+            <span class="ph-name">JEAN D. N°1234 ⚙️</span>
+            <span class="ph-toggle">🌙 Nuit</span>
+          </div>
+          <div class="ph-body">
+            <div class="ph-total-card">
+              <div class="ph-circles">
+                <div class="ph-circle-wrap">
+                  <svg width="52" height="52" viewBox="0 0 52 52">
+                    <circle cx="26" cy="26" r="20" fill="none" stroke="#eef0f8" stroke-width="5"/>
+                    <circle cx="26" cy="26" r="20" fill="none" stroke="#1b2cc1" stroke-width="5" stroke-dasharray="100 26" stroke-linecap="round" transform="rotate(-90 26 26)"/>
+                    <text x="26" y="30" text-anchor="middle" font-size="9" font-weight="700" fill="#1b2cc1">7h15</text>
+                  </svg>
+                  <div class="ph-circle-lbl">TRAVAILLÉ</div>
+                </div>
+                <div class="ph-circle-wrap">
+                  <svg width="52" height="52" viewBox="0 0 52 52">
+                    <circle cx="26" cy="26" r="20" fill="none" stroke="#eef0f8" stroke-width="5"/>
+                    <circle cx="26" cy="26" r="20" fill="none" stroke="#5856D6" stroke-width="5" stroke-dasharray="113 13" stroke-linecap="round" transform="rotate(-90 26 26)"/>
+                    <text x="26" y="30" text-anchor="middle" font-size="9" font-weight="700" fill="#5856D6">9h30</text>
+                  </svg>
+                  <div class="ph-circle-lbl">AMPLITUDE</div>
+                </div>
+              </div>
+              <div class="ph-right">
+                <div class="ph-right-title">TOTAL JOURNÉE</div>
+                <div class="ph-stat"><span class="ph-slbl">CONTRAT</span><span class="ph-sval">120h/mois</span></div>
+                <div class="ph-stat"><span class="ph-slbl">CUMUL MOIS</span><span class="ph-sval">84h45</span></div>
+                <div class="ph-stat"><span class="ph-slbl">HEURES SUP</span><span class="ph-sval green">+2h30 ↑</span></div>
+              </div>
+            </div>
+            <div class="ph-day-row">
+              <div class="ph-dot" style="background:#1b2cc1"></div>
+              <div class="ph-day-info">
+                <div class="ph-day-time">05:30 → 09:15</div>
+                <div class="ph-day-dur">Service matin — 3h45</div>
+              </div>
+            </div>
+            <div class="ph-day-row">
+              <div class="ph-dot" style="background:#5856D6"></div>
+              <div class="ph-day-info">
+                <div class="ph-day-time">13:00 → 16:30</div>
+                <div class="ph-day-dur">Service après-midi — 3h30</div>
+              </div>
+            </div>
+            <div class="ph-sup-card">
+              <div><div class="ph-sup-lbl">HEURES SUP CE MOIS</div><div style="font-size:9px;color:#6e6e73">sur contrat 120h</div></div>
+              <div class="ph-sup-val">+2h30</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── MÉTIERS ── -->
+<section class="metiers-bg" id="metiers">
+  <div class="container">
+    <div class="section-tag" data-fr="Pour qui ?" data-en="Who is it for?">Pour qui ?</div>
+    <h2 class="section-title" data-fr="Fait pour les métiers en horaires décalés" data-en="Built for shift-based professions">Fait pour les métiers en horaires décalés</h2>
+    <p class="section-sub" data-fr="Kronobus s'adapte à tous les professionnels qui ont besoin de suivre leurs heures travaillées avec précision au quotidien." data-en="Kronobus adapts to all professionals who need to accurately track their working hours on a daily basis.">Kronobus s'adapte à tous les professionnels qui ont besoin de suivre leurs heures travaillées avec précision au quotidien.</p>
+    <div class="metiers-grid">
+      <div class="metier-card">
+        <span class="metier-icon">🚌</span>
+        <div class="metier-name" data-fr="Conducteurs de bus" data-en="Bus drivers">Conducteurs de bus</div>
+        <div class="metier-sub" data-fr="Services multiples, amplitudes" data-en="Multiple shifts, amplitudes">Services multiples, amplitudes</div>
+      </div>
+      <div class="metier-card">
+        <span class="metier-icon">🚛</span>
+        <div class="metier-name" data-fr="Chauffeurs poids lourds" data-en="Truck drivers">Chauffeurs poids lourds</div>
+        <div class="metier-sub" data-fr="Temps de conduite, repos" data-en="Drive time, rest periods">Temps de conduite, repos</div>
+      </div>
+      <div class="metier-card">
+        <span class="metier-icon">🏥</span>
+        <div class="metier-name" data-fr="Soignants" data-en="Healthcare workers">Soignants</div>
+        <div class="metier-sub" data-fr="Gardes, nuits, astreintes" data-en="On-call, nights, standby">Gardes, nuits, astreintes</div>
+      </div>
+      <div class="metier-card">
+        <span class="metier-icon">🏭</span>
+        <div class="metier-name" data-fr="Ouvriers & techniciens" data-en="Workers & technicians">Ouvriers & techniciens</div>
+        <div class="metier-sub" data-fr="3×8, week-ends, postes" data-en="3-shift, weekends, posts">3×8, week-ends, postes</div>
+      </div>
+      <div class="metier-card">
+        <span class="metier-icon">🔒</span>
+        <div class="metier-name" data-fr="Agents de sécurité" data-en="Security officers">Agents de sécurité</div>
+        <div class="metier-sub" data-fr="Rondes, postes de nuit" data-en="Rounds, night shifts">Rondes, postes de nuit</div>
+      </div>
+      <div class="metier-card" style="border-style:dashed">
+        <span class="metier-icon">➕</span>
+        <div class="metier-name" data-fr="Votre secteur ?" data-en="Your sector?">Votre secteur ?</div>
+        <div class="metier-sub" data-fr="Tout métier en horaires variables" data-en="Any shift-based profession">Tout métier en horaires variables</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── FONCTIONNALITÉS ── -->
+<section id="fonctionnalites">
+  <div class="container">
+    <div class="section-tag" data-fr="Fonctionnalités" data-en="Features">Fonctionnalités</div>
+    <h2 class="section-title" data-fr="Tout ce dont vous avez besoin, rien de superflu" data-en="Everything you need, nothing superfluous">Tout ce dont vous avez besoin, rien de superflu</h2>
+    <p class="section-sub" data-fr="Conçu pour être utilisé une main dans le dos, debout, entre deux services." data-en="Designed to be used one-handed, standing, between two shifts.">Conçu pour être utilisé une main dans le dos, debout, entre deux services.</p>
+    <div class="feats-grid">
+      <div class="feat">
+        <div class="feat-icon">⏱️</div>
+        <h3 data-fr="Pointage à la minute" data-en="Minute-precise tracking">Pointage à la minute</h3>
+        <p data-fr="Roulette heure/minute avec défilement infini. Plusieurs services par jour. Amplitude automatique." data-en="Hour/minute dial with infinite scroll. Multiple shifts per day. Automatic amplitude.">Roulette heure/minute avec défilement infini. Plusieurs services par jour. Amplitude automatique.</p>
+      </div>
+      <div class="feat">
+        <div class="feat-icon">📊</div>
+        <h3 data-fr="Rapports automatiques" data-en="Automatic reports">Rapports automatiques</h3>
+        <p data-fr="Totaux jour, semaine, mois, année. Moyennes, heures de nuit et week-end identifiées automatiquement." data-en="Daily, weekly, monthly, yearly totals. Averages, nights and weekends identified automatically.">Totaux jour, semaine, mois, année. Moyennes, heures de nuit et week-end identifiées automatiquement.</p>
+      </div>
+      <div class="feat">
+        <div class="feat-icon">⏫</div>
+        <h3 data-fr="Suivi des heures sup" data-en="Overtime tracking">Suivi des heures sup</h3>
+        <p data-fr="Contrat mensuel configurable. Écart affiché en temps réel. Bilan annuel cumulé automatiquement." data-en="Configurable monthly contract. Real-time variance display. Cumulative annual balance.">Contrat mensuel configurable. Écart affiché en temps réel. Bilan annuel cumulé automatiquement.</p>
+      </div>
+      <div class="feat">
+        <div class="feat-icon">📄</div>
+        <h3 data-fr="Export PDF & Excel" data-en="PDF & Excel export">Export PDF & Excel</h3>
+        <p data-fr="Rapport mensuel formaté prêt à imprimer. Export CSV enrichi envoyé directement par email." data-en="Print-ready monthly report. Enriched CSV export sent directly by email.">Rapport mensuel formaté prêt à imprimer. Export CSV enrichi envoyé directement par email.</p>
+      </div>
+      <div class="feat">
+        <div class="feat-icon">📷</div>
+        <h3 data-fr="Photos de défauts" data-en="Defect photos">Photos de défauts</h3>
+        <p data-fr="Photographiez les anomalies du véhicule, horodatées automatiquement avec description." data-en="Photograph vehicle anomalies, automatically timestamped with description.">Photographiez les anomalies du véhicule, horodatées automatiquement avec description.</p>
+      </div>
+      <div class="feat">
+        <div class="feat-icon">🔒</div>
+        <h3 data-fr="Données privées & sécurisées" data-en="Private & secure data">Données privées & sécurisées</h3>
+        <p data-fr="100% local sur votre téléphone. Code PIN à chaque ouverture. Aucun serveur ne stocke vos données." data-en="100% local on your phone. PIN code at every launch. No server stores your data.">100% local sur votre téléphone. Code PIN à chaque ouverture. Aucun serveur ne stocke vos données.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── TARIFS ── -->
+<section class="pricing-bg" id="tarifs">
+  <div class="container">
+    <div class="section-tag" data-fr="Tarifs" data-en="Pricing">Tarifs</div>
+    <h2 class="section-title" data-fr="Choisissez votre formule" data-en="Choose your plan">Choisissez votre formule</h2>
+    <p class="section-sub" data-fr="14 jours d'essai gratuit sur toutes les formules. Annulation à tout moment." data-en="14-day free trial on all plans. Cancel anytime.">14 jours d'essai gratuit sur toutes les formules. Annulation à tout moment.</p>
+    <div class="pricing-grid">
+      <!-- Particulier -->
+      <div class="pricing-card featured">
+        <div class="pricing-badge" data-fr="⭐ Le plus populaire" data-en="⭐ Most popular">⭐ Le plus populaire</div>
+        <div class="pricing-type" data-fr="Particulier" data-en="Individual">Particulier</div>
+        <div class="pricing-name" data-fr="Pro Personnel" data-en="Personal Pro">Pro Personnel</div>
+        <div class="pricing-price">
+          <span class="pricing-amount">3,99€</span>
+          <span class="pricing-period" data-fr="/mois" data-en="/month">/mois</span>
+        </div>
+        <div class="pricing-annual" data-fr="ou <strong>34,99€/an</strong> — économisez 27%" data-en="or <strong>€34.99/year</strong> — save 27%">ou <strong>34,99€/an</strong> — économisez 27%</div>
+        <div class="pricing-divider"></div>
+        <ul class="pricing-features">
+          <li><span class="check"></span><span data-fr="Pointage illimité, tous les jours" data-en="Unlimited tracking, every day">Pointage illimité, tous les jours</span></li>
+          <li><span class="check"></span><span data-fr="Rapports semaine, mois, année" data-en="Weekly, monthly, yearly reports">Rapports semaine, mois, année</span></li>
+          <li><span class="check"></span><span data-fr="Suivi des heures supplémentaires" data-en="Overtime tracking">Suivi des heures supplémentaires</span></li>
+          <li><span class="check"></span><span data-fr="Export PDF & Excel par email" data-en="PDF & Excel email export">Export PDF & Excel par email</span></li>
+          <li><span class="check"></span><span data-fr="Photos de défauts horodatées" data-en="Timestamped defect photos">Photos de défauts horodatées</span></li>
+          <li><span class="check"></span><span data-fr="Mode hors-ligne (PWA)" data-en="Offline mode (PWA)">Mode hors-ligne (PWA)</span></li>
+          <li><span class="check"></span><span data-fr="Mises à jour incluses" data-en="Updates included">Mises à jour incluses</span></li>
+        </ul>
+        <a href="https://kronobus.vercel.app" class="pricing-cta primary" data-fr="Commencer l'essai gratuit" data-en="Start free trial">Commencer l'essai gratuit</a>
+      </div>
+      <!-- Entreprise -->
+      <div class="pricing-card">
+        <div class="pricing-type" data-fr="Entreprise" data-en="Business">Entreprise</div>
+        <div class="pricing-name" data-fr="Licence Entreprise" data-en="Business License">Licence Entreprise</div>
+        <div class="pricing-price">
+          <span class="pricing-amount" style="font-size:32px" data-fr="Sur devis" data-en="Custom">Sur devis</span>
+        </div>
+        <div class="pricing-annual" data-fr="Tarif dégressif par siège · facturation mensuelle ou annuelle" data-en="Volume pricing per seat · monthly or annual billing">Tarif dégressif par siège · facturation mensuelle ou annuelle</div>
+        <div class="pricing-divider"></div>
+        <ul class="pricing-features">
+          <li><span class="check"></span><span data-fr="Tout le plan Pro Personnel" data-en="Everything in Personal Pro">Tout le plan Pro Personnel</span></li>
+          <li><span class="check"></span><span data-fr="Console admin RH — validation des comptes" data-en="HR admin console — account validation">Console admin RH — validation des comptes</span></li>
+          <li><span class="check"></span><span data-fr="Tableau de bord entreprise centralisé" data-en="Centralized company dashboard">Tableau de bord entreprise centralisé</span></li>
+          <li><span class="check"></span><span data-fr="Gestion des matricules et équipes" data-en="Employee ID and team management">Gestion des matricules et équipes</span></li>
+          <li><span class="check"></span><span data-fr="Export groupé pour la paie" data-en="Group export for payroll">Export groupé pour la paie</span></li>
+          <li><span class="check"></span><span data-fr="Support prioritaire dédié" data-en="Dedicated priority support">Support prioritaire dédié</span></li>
+          <li><span class="check"></span><span data-fr="Facturation unifiée" data-en="Unified billing">Facturation unifiée</span></li>
+        </ul>
+        <a href="mailto:contact@kronobus.fr" class="pricing-cta secondary" data-fr="Nous contacter" data-en="Contact us">Nous contacter</a>
+      </div>
+    </div>
+    <p class="pricing-note" data-fr="Paiement sécurisé par Stripe · Résiliation sans engagement · TVA incluse pour les particuliers" data-en="Secure payment via Stripe · No commitment cancellation · VAT included for individuals">Paiement sécurisé par Stripe · Résiliation sans engagement · TVA incluse pour les particuliers</p>
+  </div>
+</section>
+
+<!-- ── INSTALLER ── -->
+<section class="pwa-section" id="installer">
+  <div class="container">
+    <div class="pwa-grid">
+      <div>
+        <div class="section-tag" data-fr="Installation" data-en="Installation">Installation</div>
+        <h2 class="section-title" data-fr="Installez Kronobus sur votre téléphone" data-en="Install Kronobus on your phone">Installez Kronobus sur votre téléphone</h2>
+        <p class="section-sub" style="margin-bottom:32px" data-fr="Aucune boutique d'applications. Directement depuis votre navigateur, en 3 étapes." data-en="No app store. Directly from your browser, in 3 steps.">Aucune boutique d'applications. Directement depuis votre navigateur, en 3 étapes.</p>
+        <div class="pwa-step">
+          <div class="pwa-num">1</div>
+          <div class="pwa-step-body">
+            <h4 data-fr="Ouvrez kronobus.app dans votre navigateur" data-en="Open kronobus.app in your browser">Ouvrez kronobus.app dans votre navigateur</h4>
+            <p data-fr="Safari sur iPhone, Chrome sur Android — les deux fonctionnent." data-en="Safari on iPhone, Chrome on Android — both work.">Safari sur iPhone, Chrome sur Android — les deux fonctionnent.</p>
+          </div>
+        </div>
+        <div class="pwa-step">
+          <div class="pwa-num">2</div>
+          <div class="pwa-step-body">
+            <h4 data-fr="Appuyez sur « Ajouter à l'écran d'accueil »" data-en="Tap 'Add to Home Screen'">Appuyez sur « Ajouter à l'écran d'accueil »</h4>
+            <p data-fr="iPhone : bouton partage → Ajouter. Android : menu → Installer." data-en="iPhone: share button → Add. Android: menu → Install.">iPhone : bouton partage → Ajouter. Android : menu → Installer.</p>
+          </div>
+        </div>
+        <div class="pwa-step">
+          <div class="pwa-num">3</div>
+          <div class="pwa-step-body">
+            <h4 data-fr="Ouvrez l'app depuis votre écran d'accueil" data-en="Open the app from your home screen">Ouvrez l'app depuis votre écran d'accueil</h4>
+            <p data-fr="Kronobus s'ouvre comme une vraie app, sans barre de navigation, même hors-ligne." data-en="Kronobus opens like a real app, no browser bar, even offline.">Kronobus s'ouvre comme une vraie app, sans barre de navigation, même hors-ligne.</p>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="pwa-devices">
+          <div class="pwa-device-card">
+            <div class="pwa-device-icon">📱</div>
+            <div class="pwa-device-name">iPhone</div>
+            <div class="pwa-device-desc" data-fr="iOS 14+ · Safari requis · Icône sur l'écran d'accueil" data-en="iOS 14+ · Safari required · Home screen icon">iOS 14+ · Safari requis · Icône sur l'écran d'accueil</div>
+          </div>
+          <div class="pwa-device-card">
+            <div class="pwa-device-icon">🤖</div>
+            <div class="pwa-device-name">Android</div>
+            <div class="pwa-device-desc" data-fr="Android 8+ · Chrome requis · Installation native" data-en="Android 8+ · Chrome required · Native install">Android 8+ · Chrome requis · Installation native</div>
+          </div>
+          <div class="pwa-device-card">
+            <div class="pwa-device-icon">💻</div>
+            <div class="pwa-device-name">Desktop</div>
+            <div class="pwa-device-desc" data-fr="Windows, Mac · Chrome ou Edge · Raccourci bureau" data-en="Windows, Mac · Chrome or Edge · Desktop shortcut">Windows, Mac · Chrome ou Edge · Raccourci bureau</div>
+          </div>
+          <div class="pwa-device-card" style="background:var(--blue);border-color:var(--blue)">
+            <div class="pwa-device-icon">⚡</div>
+            <div class="pwa-device-name" style="color:#fff">Hors-ligne</div>
+            <div class="pwa-device-desc" style="color:rgba(255,255,255,.7)" data-fr="Fonctionne sans connexion. Synchronisation automatique au retour." data-en="Works offline. Automatic sync when back online.">Fonctionne sans connexion. Sync automatique au retour.</div>
+          </div>
+        </div>
+        <div style="margin-top:20px;text-align:center">
+          <a href="https://kronobus.vercel.app" class="btn-primary" style="width:100%;justify-content:center" data-fr="Ouvrir Kronobus →" data-en="Open Kronobus →">Ouvrir Kronobus →</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── FOOTER ── -->
+<footer>
+  <div class="footer-inner">
+    <div>
+      <div class="footer-logo">
+        <div class="footer-logo-k">K</div>
+        <span class="footer-logo-name">Kronobus</span>
+      </div>
+      <p class="footer-desc" data-fr="L'application de gestion des horaires pour les professionnels en horaires variables. Conçue pour le terrain, pas pour les bureaux." data-en="The time management app for shift-based professionals. Designed for the field, not the office.">L'application de gestion des horaires pour les professionnels en horaires variables. Conçue pour le terrain, pas pour les bureaux.</p>
+    </div>
+    <div class="footer-col">
+      <h4 data-fr="Produit" data-en="Product">Produit</h4>
+      <a href="#fonctionnalites" data-fr="Fonctionnalités" data-en="Features">Fonctionnalités</a>
+      <a href="#tarifs" data-fr="Tarifs" data-en="Pricing">Tarifs</a>
+      <a href="#installer" data-fr="Installer l'app" data-en="Install the app">Installer l'app</a>
+      <a href="https://kronobus.vercel.app" data-fr="Essai gratuit" data-en="Free trial">Essai gratuit</a>
+    </div>
+    <div class="footer-col">
+      <h4 data-fr="Contact" data-en="Contact">Contact</h4>
+      <a href="mailto:contact@kronobus.fr">contact@kronobus.fr</a>
+      <a href="#" data-fr="Mentions légales" data-en="Legal notice">Mentions légales</a>
+      <a href="#" data-fr="Politique de confidentialité" data-en="Privacy policy">Politique de confidentialité</a>
+      <a href="#" data-fr="CGU" data-en="Terms of service">CGU</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span data-fr="© 2025 Kronobus — Tous droits réservés" data-en="© 2025 Kronobus — All rights reserved">© 2025 Kronobus — Tous droits réservés</span>
+    <div class="footer-bottom-links">
+      <a href="#" data-fr="Confidentialité" data-en="Privacy">Confidentialité</a>
+      <a href="#" data-fr="Conditions" data-en="Terms">Conditions</a>
+      <a href="mailto:contact@kronobus.fr">Contact</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+// ── LANGUE ──────────────────────────────────────────────────────────────────
+var currentLang = 'fr';
+
+function setLang(lang) {
+  currentLang = lang;
+  document.querySelectorAll('.lang-btn').forEach(function(btn) {
+    btn.classList.toggle('active', btn.textContent.toLowerCase() === lang);
+  });
+  document.querySelectorAll('[data-fr]').forEach(function(el) {
+    var txt = el.getAttribute('data-' + lang);
+    if (!txt) return;
+    if (el.children.length === 0) {
+      el.textContent = txt;
+    } else {
+      el.innerHTML = txt;
+    }
+  });
+  document.documentElement.lang = lang;
+}
+
+// ── SCROLL REVEAL ───────────────────────────────────────────────────────────
+var observer = new IntersectionObserver(function(entries) {
+  entries.forEach(function(entry) {
+    if (entry.isIntersecting) {
+      entry.target.style.opacity = '1';
+      entry.target.style.transform = 'translateY(0)';
+      observer.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.1 });
+
+document.querySelectorAll('.metier-card, .feat, .pricing-card, .pwa-device-card, .pwa-step').forEach(function(el, i) {
+  el.style.opacity = '0';
+  el.style.transform = 'translateY(20px)';
+  el.style.transition = 'opacity .5s ease ' + (i * 0.06) + 's, transform .5s ease ' + (i * 0.06) + 's';
+  observer.observe(el);
+});
+</script>
+</body>
+</html>
