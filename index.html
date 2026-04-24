@@ -93,7 +93,7 @@ body {
 .hero {
   padding: 140px 32px 80px;
   max-width: var(--max); margin: 0 auto;
-  display: grid; grid-template-columns: 1fr 420px; gap: 60px; align-items: center;
+  display: grid; grid-template-columns: 1fr 300px; gap: 48px; align-items: center;
 }
 .hero-badge {
   display: inline-flex; align-items: center; gap: 8px;
@@ -148,17 +148,19 @@ body {
 
 /* ── PHONE MOCKUP ── */
 .phone-outer {
-  width: 280px; margin: 0 auto;
-  background: #0f1117; border-radius: 46px;
-  padding: 14px 10px; box-shadow: 0 40px 80px rgba(15,17,23,.25), 0 0 0 1px rgba(255,255,255,.06);
-  position: relative;
+  width: 260px;
+  background: #0f1117; border-radius: 44px;
+  padding: 16px 12px 20px;
+  box-shadow: 0 40px 80px rgba(15,17,23,.3), 0 0 0 1.5px rgba(255,255,255,.08);
+  position: relative; flex-shrink: 0;
 }
 .phone-notch {
-  width: 80px; height: 8px; background: #1a1a2e;
-  border-radius: 4px; margin: 0 auto 10px;
+  width: 90px; height: 10px; background: #000;
+  border-radius: 5px; margin: 0 auto 12px;
 }
 .phone-screen {
-  background: #f5f5f7; border-radius: 36px; overflow: hidden;
+  background: #f5f5f7; border-radius: 32px; overflow: hidden;
+  min-height: 520px;
 }
 .ph-statusbar {
   background: #1b2cc1; padding: 8px 14px 0;
@@ -238,9 +240,7 @@ section { padding: 80px 32px; }
   text-align: center; transition: border-color .2s, transform .2s;
 }
 .metier-card:hover { border-color: var(--blue-mid); transform: translateY(-2px); }
-.metier-icon {
-  font-size: 28px; margin-bottom: 12px; display: block;
-}
+
 .metier-name { font-size: 14px; font-weight: 600; color: var(--ink); margin-bottom: 4px; }
 .metier-sub { font-size: 12px; color: var(--ink-ghost); }
 
@@ -255,9 +255,12 @@ section { padding: 80px 32px; }
 }
 .feat:hover { background: var(--surface-2); }
 .feat-icon {
-  width: 44px; height: 44px; border-radius: 12px;
-  background: var(--blue-light); display: flex; align-items: center;
-  justify-content: center; font-size: 20px; margin-bottom: 16px;
+  font-size: 48px; line-height: 1;
+  margin-bottom: 16px; display: block;
+}
+.metier-icon {
+  font-size: 48px; line-height: 1;
+  display: block; margin-bottom: 14px;
 }
 .feat h3 { font-size: 16px; font-weight: 600; color: var(--ink); margin-bottom: 8px; }
 .feat p { font-size: 14px; color: var(--ink-mid); line-height: 1.6; }
@@ -407,7 +410,103 @@ footer {
 .hero-left > *:nth-child(3) { animation-delay: .3s; }
 .hero-left > *:nth-child(4) { animation-delay: .4s; }
 .hero-left > *:nth-child(5) { animation-delay: .5s; }
-.hero-right { opacity: 0; transform: translateX(30px); animation: fadeIn .8s .3s ease forwards; }
+.hero-right {
+  opacity: 0; transform: translateX(30px); animation: fadeIn .8s .3s ease forwards;
+  display: flex; align-items: center; justify-content: center;
+}
+
+/* ── SEMAINE BARRES ── */
+.ph-week-row {
+  display:flex; align-items:center; gap:5px; margin-bottom:4px;
+}
+.ph-wday { font-size:8px; font-weight:700; color:#1d1d1f; width:18px; flex-shrink:0; }
+.ph-wbar-bg {
+  flex:1; height:5px; background:#f0f0f5; border-radius:3px; overflow:hidden;
+}
+.ph-wbar-fill {
+  height:100%; width:var(--pct,0%); background:var(--col,#1b2cc1);
+  border-radius:3px; transition:width .8s ease;
+}
+.ph-wval { font-size:8px; font-weight:700; color:#1d1d1f; width:26px; text-align:right; flex-shrink:0; }
+
+/* ── CALENDRIER ── */
+.ph-cal-hdr { font-size:7px; font-weight:700; color:#adadb8; text-align:center; }
+.ph-cal-d {
+  font-size:8px; font-weight:600; text-align:center;
+  width:100%; aspect-ratio:1; display:flex; align-items:center; justify-content:center;
+  border-radius:50%;
+}
+.ph-cal-empty { color:#c7c7cc; }
+.ph-cal-w { background:#eef1ff; color:#1b2cc1; }
+.ph-cal-we { background:#fff0f0; color:#FF3B30; }
+.ph-cal-night { background:#ede9ff; color:#5856D6; }
+.ph-cal-today { background:#1b2cc1; color:#fff; font-weight:800; }
+
+/* ── INSTALL TABS ── */
+.install-tab {
+  padding: 10px 20px; border-radius: var(--radius);
+  border: 1.5px solid var(--border-strong);
+  background: var(--surface); color: var(--ink-mid);
+  font-family: var(--font-body); font-size: 14px; font-weight: 500;
+  cursor: pointer; transition: all .2s;
+}
+.install-tab.active, .install-tab:hover {
+  background: var(--blue); color: #fff; border-color: var(--blue);
+}
+.install-steps-grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(220px,1fr)); gap: 20px;
+  margin-bottom: 20px;
+}
+.install-step-card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius-lg); padding: 28px 24px;
+  position: relative;
+}
+.install-step-num {
+  position: absolute; top: -12px; left: 20px;
+  width: 26px; height: 26px; border-radius: 50%;
+  background: var(--blue); color: #fff;
+  font-size: 12px; font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+}
+.install-step-icon { font-size: 28px; margin-bottom: 12px; }
+.install-step-card h4 { font-size: 15px; font-weight: 600; margin-bottom: 8px; }
+.install-step-card p { font-size: 13px; color: var(--ink-mid); line-height: 1.6; }
+.install-result {
+  background: var(--blue-light); border: 1px solid rgba(27,44,193,.2);
+  border-radius: var(--radius); padding: 14px 18px;
+  font-size: 14px; font-weight: 500; color: var(--blue);
+}
+
+/* ── STORES SOON ── */
+.stores-soon {
+  margin-top: 56px; text-align: center;
+  padding: 40px; background: var(--surface);
+  border: 1.5px dashed var(--border-strong); border-radius: var(--radius-lg);
+}
+.stores-soon-label {
+  display: inline-block; background: var(--ink); color: #fff;
+  font-size: 11px; font-weight: 700; letter-spacing: .8px; text-transform: uppercase;
+  padding: 4px 14px; border-radius: 99px; margin-bottom: 14px;
+}
+.stores-soon h3 {
+  font-family: var(--font-display); font-size: 26px; margin-bottom: 10px;
+}
+.stores-soon p { font-size: 15px; color: var(--ink-mid); max-width: 520px; margin: 0 auto 28px; }
+.stores-badges { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; align-items: center; }
+.store-badge {
+  display: flex; align-items: center; gap: 12px;
+  padding: 12px 20px; border-radius: var(--radius);
+  border: 1.5px solid var(--border);
+}
+.store-badge-grey { background: var(--surface-3); opacity: .6; filter: grayscale(1); }
+.store-badge-icon { font-size: 24px; }
+.store-badge-sub { font-size: 10px; color: var(--ink-ghost); font-weight: 600; }
+.store-badge-name { font-size: 16px; font-weight: 700; color: var(--ink); }
+.store-notify {
+  display: flex; gap: 8px; width: 100%; max-width: 420px;
+}
+
 </style>
 </head>
 <body>
@@ -467,7 +566,9 @@ footer {
             <span class="ph-name">JEAN D. N°1234 ⚙️</span>
             <span class="ph-toggle">🌙 Nuit</span>
           </div>
-          <div class="ph-body">
+          <div class="ph-body" style="overflow-y:auto;max-height:490px;scrollbar-width:none">
+
+            <!-- Bloc total journée -->
             <div class="ph-total-card">
               <div class="ph-circles">
                 <div class="ph-circle-wrap">
@@ -494,6 +595,8 @@ footer {
                 <div class="ph-stat"><span class="ph-slbl">HEURES SUP</span><span class="ph-sval green">+2h30 ↑</span></div>
               </div>
             </div>
+
+            <!-- Services du jour -->
             <div class="ph-day-row">
               <div class="ph-dot" style="background:#1b2cc1"></div>
               <div class="ph-day-info">
@@ -512,6 +615,82 @@ footer {
               <div><div class="ph-sup-lbl">HEURES SUP CE MOIS</div><div style="font-size:9px;color:#6e6e73">sur contrat 120h</div></div>
               <div class="ph-sup-val">+2h30</div>
             </div>
+
+            <!-- Séparateur Vue Semaine -->
+            <div style="display:flex;align-items:center;gap:6px;margin:10px 0 6px">
+              <div style="font-size:8px;font-weight:800;color:#1b2cc1;letter-spacing:.5px">SEMAINE EN COURS</div>
+              <div style="flex:1;height:1px;background:#e5e5ea"></div>
+            </div>
+
+            <!-- Vue semaine barres -->
+            <div style="background:#fff;border-radius:10px;padding:8px 10px;margin-bottom:6px;box-shadow:0 1px 4px rgba(0,0,0,.05)">
+              <div class="ph-week-row" style="--pct:78%;--col:#1b2cc1"><span class="ph-wday">Lun</span><div class="ph-wbar-bg"><div class="ph-wbar-fill"></div></div><span class="ph-wval">6h30</span></div>
+              <div class="ph-week-row" style="--pct:90%;--col:#1b2cc1"><span class="ph-wday">Mar</span><div class="ph-wbar-bg"><div class="ph-wbar-fill"></div></div><span class="ph-wval">7h45</span></div>
+              <div class="ph-week-row" style="--pct:60%;--col:#5856D6"><span class="ph-wday">Mer</span><div class="ph-wbar-bg"><div class="ph-wbar-fill" style="background:#5856D6"></div></div><span class="ph-wval">5h00</span></div>
+              <div class="ph-week-row" style="--pct:88%;--col:#1b2cc1"><span class="ph-wday">Jeu</span><div class="ph-wbar-bg"><div class="ph-wbar-fill"></div></div><span class="ph-wval">7h30</span></div>
+              <div class="ph-week-row" style="--pct:100%;--col:#1b2cc1"><span class="ph-wday">Ven</span><div class="ph-wbar-bg"><div class="ph-wbar-fill"></div></div><span class="ph-wval">8h15</span></div>
+              <div class="ph-week-row" style="--pct:42%;--col:#FF3B30"><span class="ph-wday" style="color:#FF3B30">Sam</span><div class="ph-wbar-bg"><div class="ph-wbar-fill" style="background:#FF3B30"></div></div><span class="ph-wval" style="color:#FF3B30">3h30</span></div>
+              <div class="ph-week-row" style="--pct:0%"><span class="ph-wday" style="color:#c7c7cc">Dim</span><div class="ph-wbar-bg"><div class="ph-wbar-fill" style="width:0%"></div></div><span class="ph-wval" style="color:#c7c7cc">—</span></div>
+            </div>
+            <div style="background:#f5f5f7;border-radius:8px;padding:6px 10px;margin-bottom:6px;display:flex;justify-content:space-between">
+              <div style="text-align:center"><div style="font-size:8px;color:#6e6e73;font-weight:700">TOTAL SEM.</div><div style="font-size:11px;font-weight:800;color:#1d1d1f">38h30</div></div>
+              <div style="text-align:center"><div style="font-size:8px;color:#6e6e73;font-weight:700">MOY./JOUR</div><div style="font-size:11px;font-weight:800;color:#1d1d1f">7h42</div></div>
+              <div style="text-align:center"><div style="font-size:8px;color:#6e6e73;font-weight:700">NUITS</div><div style="font-size:11px;font-weight:800;color:#5856D6">1</div></div>
+              <div style="text-align:center"><div style="font-size:8px;color:#6e6e73;font-weight:700">W-E</div><div style="font-size:11px;font-weight:800;color:#FF3B30">3h30</div></div>
+            </div>
+
+            <!-- Séparateur Calendrier -->
+            <div style="display:flex;align-items:center;gap:6px;margin:10px 0 6px">
+              <div style="font-size:8px;font-weight:800;color:#1b2cc1;letter-spacing:.5px">AVRIL 2025</div>
+              <div style="flex:1;height:1px;background:#e5e5ea"></div>
+            </div>
+
+            <!-- Mini calendrier mensuel -->
+            <div style="background:#fff;border-radius:10px;padding:8px 10px;margin-bottom:6px;box-shadow:0 1px 4px rgba(0,0,0,.05)">
+              <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:2px;margin-bottom:4px">
+                <div class="ph-cal-hdr">L</div><div class="ph-cal-hdr">M</div><div class="ph-cal-hdr">M</div>
+                <div class="ph-cal-hdr">J</div><div class="ph-cal-hdr">V</div>
+                <div class="ph-cal-hdr" style="color:#FF3B30">S</div><div class="ph-cal-hdr" style="color:#FF3B30">D</div>
+              </div>
+              <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:2px">
+                <div class="ph-cal-d ph-cal-empty"></div>
+                <div class="ph-cal-d ph-cal-w">1</div><div class="ph-cal-d ph-cal-w">2</div>
+                <div class="ph-cal-d ph-cal-w">3</div><div class="ph-cal-d ph-cal-w">4</div>
+                <div class="ph-cal-d ph-cal-we">5</div><div class="ph-cal-d ph-cal-we">6</div>
+                <div class="ph-cal-d ph-cal-w">7</div><div class="ph-cal-d ph-cal-w">8</div>
+                <div class="ph-cal-d ph-cal-night">9</div><div class="ph-cal-d ph-cal-w">10</div>
+                <div class="ph-cal-d ph-cal-w">11</div><div class="ph-cal-d ph-cal-we">12</div><div class="ph-cal-d ph-cal-we">13</div>
+                <div class="ph-cal-d ph-cal-w">14</div><div class="ph-cal-d ph-cal-w">15</div>
+                <div class="ph-cal-d ph-cal-w">16</div><div class="ph-cal-d ph-cal-w">17</div>
+                <div class="ph-cal-d ph-cal-w">18</div><div class="ph-cal-d ph-cal-we">19</div><div class="ph-cal-d ph-cal-we">20</div>
+                <div class="ph-cal-d ph-cal-w">21</div><div class="ph-cal-d ph-cal-w">22</div>
+                <div class="ph-cal-d ph-cal-w">23</div><div class="ph-cal-d ph-cal-today">24</div>
+                <div class="ph-cal-d ph-cal-w">25</div><div class="ph-cal-d ph-cal-we">26</div><div class="ph-cal-d ph-cal-we">27</div>
+                <div class="ph-cal-d ph-cal-empty">28</div><div class="ph-cal-d ph-cal-empty">29</div>
+                <div class="ph-cal-d ph-cal-empty">30</div>
+                <div class="ph-cal-d"></div><div class="ph-cal-d"></div><div class="ph-cal-d"></div><div class="ph-cal-d"></div>
+              </div>
+            </div>
+
+            <!-- Stats mois -->
+            <div style="background:#fff;border-radius:10px;padding:8px 10px;margin-bottom:10px;box-shadow:0 1px 4px rgba(0,0,0,.05)">
+              <div style="font-size:8px;font-weight:800;color:#1d1d1f;margin-bottom:6px">SYNTHÈSE AVRIL</div>
+              <div style="display:flex;gap:4px">
+                <div style="flex:1;background:#eef1ff;border-radius:7px;padding:6px;text-align:center">
+                  <div style="font-size:12px;font-weight:800;color:#1b2cc1">84h45</div>
+                  <div style="font-size:7px;color:#6e6e73;font-weight:700;margin-top:1px">TRAVAILLÉ</div>
+                </div>
+                <div style="flex:1;background:#f5f5f7;border-radius:7px;padding:6px;text-align:center">
+                  <div style="font-size:12px;font-weight:800;color:#1d1d1f">22</div>
+                  <div style="font-size:7px;color:#6e6e73;font-weight:700;margin-top:1px">JOURS</div>
+                </div>
+                <div style="flex:1;background:#eef1ff;border-radius:7px;padding:6px;text-align:center">
+                  <div style="font-size:12px;font-weight:800;color:#1b2cc1">+2h30</div>
+                  <div style="font-size:7px;color:#6e6e73;font-weight:700;margin-top:1px">HEURES SUP</div>
+                </div>
+              </div>
+            </div>
+
           </div>
         </div>
       </div>
@@ -658,6 +837,127 @@ footer {
 <!-- ── INSTALLER ── -->
 <section class="pwa-section" id="installer">
   <div class="container">
+    <div class="section-tag" data-fr="Installation" data-en="Installation">Installation</div>
+    <h2 class="section-title" data-fr="Installez Kronobus sur votre appareil" data-en="Install Kronobus on your device">Installez Kronobus sur votre appareil</h2>
+    <p class="section-sub" data-fr="Sans passer par l'App Store. En 3 gestes, l'application est sur votre écran d'accueil — comme n'importe quelle app." data-en="No App Store needed. In 3 steps, the app is on your home screen — just like any native app.">Sans passer par l'App Store. En 3 gestes, l'application est sur votre écran d'accueil — comme n'importe quelle app.</p>
+
+    <!-- Tabs appareils -->
+    <div class="install-tabs" style="display:flex;gap:8px;margin-bottom:32px;flex-wrap:wrap">
+      <button class="install-tab active" onclick="showDevice('iphone')" id="tab-iphone">
+        📱 iPhone (iOS)
+      </button>
+      <button class="install-tab" onclick="showDevice('android')" id="tab-android">
+        🤖 Android
+      </button>
+      <button class="install-tab" onclick="showDevice('desktop')" id="tab-desktop">
+        💻 Ordinateur
+      </button>
+    </div>
+
+    <!-- iPhone -->
+    <div class="install-panel" id="panel-iphone">
+      <div class="install-steps-grid">
+        <div class="install-step-card">
+          <div class="install-step-num">1</div>
+          <div class="install-step-icon">🌐</div>
+          <h4 data-fr="Ouvrez Safari" data-en="Open Safari">Ouvrez Safari</h4>
+          <p data-fr="Allez sur kronobus.app dans Safari — pas Chrome, pas Firefox. Safari uniquement sur iPhone." data-en="Go to kronobus.app in Safari — not Chrome, not Firefox. Safari only on iPhone.">Allez sur <strong>kronobus.app</strong> dans Safari — pas Chrome, pas Firefox. Safari uniquement sur iPhone.</p>
+        </div>
+        <div class="install-step-card">
+          <div class="install-step-num">2</div>
+          <div class="install-step-icon">⬆️</div>
+          <h4 data-fr="Appuyez sur le bouton Partager" data-en="Tap the Share button">Appuyez sur le bouton Partager</h4>
+          <p data-fr="Le bouton carré avec une flèche vers le haut — en bas de l'écran sur iPhone, en haut sur iPad." data-en="The square button with an upward arrow — at the bottom on iPhone, top on iPad.">Le bouton carré avec une flèche ↑ en bas de l'écran.</p>
+        </div>
+        <div class="install-step-card">
+          <div class="install-step-num">3</div>
+          <div class="install-step-icon">➕</div>
+          <h4 data-fr="Ajouter à l'écran d'accueil" data-en="Add to Home Screen">Ajouter à l'écran d'accueil</h4>
+          <p data-fr="Faites défiler et appuyez sur « Ajouter à l'écran d'accueil » puis confirmez. L'icône Kronobus apparaît." data-en="Scroll and tap 'Add to Home Screen' then confirm. The Kronobus icon appears.">Faites défiler, appuyez sur <strong>« Ajouter à l'écran d'accueil »</strong> puis confirmez.</p>
+        </div>
+      </div>
+      <div class="install-result" data-fr="✓ Kronobus s'ouvre maintenant en plein écran, sans barre Safari, comme une vraie app." data-en="✓ Kronobus now opens full screen, without the Safari bar, like a real app.">✓ Kronobus s'ouvre maintenant en plein écran, sans barre Safari, comme une vraie app.</div>
+    </div>
+
+    <!-- Android -->
+    <div class="install-panel" id="panel-android" style="display:none">
+      <div class="install-steps-grid">
+        <div class="install-step-card">
+          <div class="install-step-num">1</div>
+          <div class="install-step-icon">🌐</div>
+          <h4 data-fr="Ouvrez Chrome" data-en="Open Chrome">Ouvrez Chrome</h4>
+          <p data-fr="Allez sur kronobus.app dans Google Chrome. Une bannière « Installer l'application » peut apparaître automatiquement." data-en="Go to kronobus.app in Google Chrome. An 'Install app' banner may appear automatically.">Allez sur <strong>kronobus.app</strong> dans Google Chrome.</p>
+        </div>
+        <div class="install-step-card">
+          <div class="install-step-num">2</div>
+          <div class="install-step-icon">⋮</div>
+          <h4 data-fr="Menu → Ajouter à l'écran d'accueil" data-en="Menu → Add to Home Screen">Menu → Ajouter à l'écran d'accueil</h4>
+          <p data-fr="Appuyez sur les 3 points en haut à droite puis « Ajouter à l'écran d'accueil » ou « Installer l'application »." data-en="Tap the 3 dots top right then 'Add to Home Screen' or 'Install app'.">Appuyez sur ⋮ puis <strong>« Installer l'application »</strong>.</p>
+        </div>
+        <div class="install-step-card">
+          <div class="install-step-num">3</div>
+          <div class="install-step-icon">✅</div>
+          <h4 data-fr="Confirmez l'installation" data-en="Confirm installation">Confirmez l'installation</h4>
+          <p data-fr="Une fenêtre s'ouvre comme pour une vraie app. Appuyez sur « Installer ». L'icône apparaît sur votre écran." data-en="A window opens like a real app install. Tap 'Install'. The icon appears on your screen.">Une fenêtre s'ouvre. Appuyez sur <strong>« Installer »</strong>.</p>
+        </div>
+      </div>
+      <div class="install-result" data-fr="✓ Sur Android, l'expérience est identique au Play Store — barre de téléchargement incluse." data-en="✓ On Android, the experience is identical to the Play Store — download bar included.">✓ Sur Android, l'expérience est identique au Play Store — barre de téléchargement incluse.</div>
+    </div>
+
+    <!-- Desktop -->
+    <div class="install-panel" id="panel-desktop" style="display:none">
+      <div class="install-steps-grid">
+        <div class="install-step-card">
+          <div class="install-step-num">1</div>
+          <div class="install-step-icon">🌐</div>
+          <h4 data-fr="Ouvrez Chrome ou Edge" data-en="Open Chrome or Edge">Ouvrez Chrome ou Edge</h4>
+          <p data-fr="Allez sur kronobus.app. Chrome et Edge supportent l'installation PWA sur Windows et Mac." data-en="Go to kronobus.app. Chrome and Edge support PWA install on Windows and Mac.">Allez sur <strong>kronobus.app</strong> dans Chrome ou Edge.</p>
+        </div>
+        <div class="install-step-card">
+          <div class="install-step-num">2</div>
+          <div class="install-step-icon">💾</div>
+          <h4 data-fr="Cliquez sur l'icône d'installation" data-en="Click the install icon">Cliquez sur l'icône d'installation</h4>
+          <p data-fr="Une icône apparaît dans la barre d'adresse (ordinateur avec flèche). Ou allez dans Menu → Installer Kronobus." data-en="An icon appears in the address bar (computer with arrow). Or go to Menu → Install Kronobus.">Une icône apparaît dans la barre d'adresse. Ou Menu → <strong>Installer Kronobus</strong>.</p>
+        </div>
+        <div class="install-step-card">
+          <div class="install-step-num">3</div>
+          <div class="install-step-icon">🖥️</div>
+          <h4 data-fr="Lancez depuis le bureau" data-en="Launch from desktop">Lancez depuis le bureau</h4>
+          <p data-fr="Un raccourci apparaît sur votre bureau et dans le menu démarrer. Kronobus s'ouvre sans navigateur." data-en="A shortcut appears on your desktop and start menu. Kronobus opens without a browser.">Un raccourci apparaît sur votre bureau. Kronobus s'ouvre sans navigateur.</p>
+        </div>
+      </div>
+      <div class="install-result" data-fr="✓ Kronobus fonctionne comme une application Windows ou Mac classique, dans sa propre fenêtre." data-en="✓ Kronobus works like a regular Windows or Mac app, in its own window.">✓ Kronobus fonctionne comme une application Windows ou Mac classique.</div>
+    </div>
+
+    <!-- Bientôt : Stores -->
+    <div class="stores-soon">
+      <div class="stores-soon-label" data-fr="Bientôt disponible" data-en="Coming soon">Bientôt disponible</div>
+      <h3 data-fr="Kronobus sur les stores officiels" data-en="Kronobus on official stores">Kronobus sur les stores officiels</h3>
+      <p data-fr="Pour encore plus de simplicité, Kronobus sera prochainement disponible sur le Play Store Android et l'App Store Apple." data-en="For even more simplicity, Kronobus will soon be available on the Android Play Store and Apple App Store.">Pour encore plus de simplicité, Kronobus sera prochainement disponible sur le Play Store Android et l'App Store Apple.</p>
+      <div class="stores-badges">
+        <div class="store-badge store-badge-grey">
+          <div class="store-badge-icon">▶</div>
+          <div>
+            <div class="store-badge-sub" data-fr="Bientôt sur" data-en="Coming soon on">Bientôt sur</div>
+            <div class="store-badge-name">Google Play</div>
+          </div>
+        </div>
+        <div class="store-badge store-badge-grey">
+          <div class="store-badge-icon">🍎</div>
+          <div>
+            <div class="store-badge-sub" data-fr="Bientôt sur" data-en="Coming soon on">Bientôt sur</div>
+            <div class="store-badge-name">App Store</div>
+          </div>
+        </div>
+        <div class="store-notify">
+          <input type="email" placeholder="votre@email.fr" id="notify-email" style="flex:1;padding:11px 14px;border:1.5px solid var(--border-strong);border-radius:var(--radius);font-family:var(--font-body);font-size:14px;outline:none;background:var(--surface)">
+          <button onclick="notifyMe()" class="btn-primary" style="white-space:nowrap" data-fr="Me prévenir" data-en="Notify me">Me prévenir</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+  <div class="container">
     <div class="pwa-grid">
       <div>
         <div class="section-tag" data-fr="Installation" data-en="Installation">Installation</div>
@@ -688,22 +988,51 @@ footer {
       <div>
         <div class="pwa-devices">
           <div class="pwa-device-card">
-            <div class="pwa-device-icon">📱</div>
+            <div style="width:48px;height:48px;border-radius:14px;background:linear-gradient(135deg,#1b2cc1,#5856D6);display:flex;align-items:center;justify-content:center;margin-bottom:10px;box-shadow:0 6px 16px rgba(27,44,193,.3)">
+  <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+    <rect x="7" y="2" width="14" height="24" rx="3" stroke="white" stroke-width="1.5" fill="rgba(255,255,255,.1)"/>
+    <line x1="11" y1="4" x2="17" y2="4" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+    <circle cx="14" cy="22" r="1.5" fill="white"/>
+    <rect x="9" y="7" width="10" height="12" rx="1.5" fill="rgba(255,255,255,.3)"/>
+  </svg>
+</div>
             <div class="pwa-device-name">iPhone</div>
             <div class="pwa-device-desc" data-fr="iOS 14+ · Safari requis · Icône sur l'écran d'accueil" data-en="iOS 14+ · Safari required · Home screen icon">iOS 14+ · Safari requis · Icône sur l'écran d'accueil</div>
           </div>
           <div class="pwa-device-card">
-            <div class="pwa-device-icon">🤖</div>
+            <div style="width:48px;height:48px;border-radius:14px;background:linear-gradient(135deg,#059669,#10b981);display:flex;align-items:center;justify-content:center;margin-bottom:10px;box-shadow:0 6px 16px rgba(5,150,105,.3)">
+  <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+    <path d="M5 18V12a9 9 0 0 1 18 0v6" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+    <rect x="3" y="18" width="22" height="6" rx="3" fill="rgba(255,255,255,.2)" stroke="white" stroke-width="1.5"/>
+    <line x1="8" y1="4" x2="6" y2="2" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+    <line x1="20" y1="4" x2="22" y2="2" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+    <circle cx="10" cy="14" r="1.5" fill="white"/>
+    <circle cx="18" cy="14" r="1.5" fill="white"/>
+  </svg>
+</div>
             <div class="pwa-device-name">Android</div>
             <div class="pwa-device-desc" data-fr="Android 8+ · Chrome requis · Installation native" data-en="Android 8+ · Chrome required · Native install">Android 8+ · Chrome requis · Installation native</div>
           </div>
           <div class="pwa-device-card">
-            <div class="pwa-device-icon">💻</div>
+            <div style="width:48px;height:48px;border-radius:14px;background:linear-gradient(135deg,#374151,#6b7280);display:flex;align-items:center;justify-content:center;margin-bottom:10px;box-shadow:0 6px 16px rgba(55,65,81,.3)">
+  <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+    <rect x="2" y="4" width="24" height="16" rx="2.5" stroke="white" stroke-width="1.5" fill="rgba(255,255,255,.1)"/>
+    <line x1="14" y1="20" x2="14" y2="24" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+    <line x1="9" y1="24" x2="19" y2="24" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+    <rect x="5" y="7" width="18" height="10" rx="1" fill="rgba(255,255,255,.2)"/>
+  </svg>
+</div>
             <div class="pwa-device-name">Desktop</div>
             <div class="pwa-device-desc" data-fr="Windows, Mac · Chrome ou Edge · Raccourci bureau" data-en="Windows, Mac · Chrome or Edge · Desktop shortcut">Windows, Mac · Chrome ou Edge · Raccourci bureau</div>
           </div>
           <div class="pwa-device-card" style="background:var(--blue);border-color:var(--blue)">
-            <div class="pwa-device-icon">⚡</div>
+            <div style="width:48px;height:48px;border-radius:14px;background:linear-gradient(135deg,#7c3aed,#a855f7);display:flex;align-items:center;justify-content:center;margin-bottom:10px;box-shadow:0 6px 16px rgba(124,58,237,.3)">
+  <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+    <path d="M14 6v10" stroke="white" stroke-width="2" stroke-linecap="round"/>
+    <polyline points="10,12 14,16 18,12" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+    <path d="M6 20a4 4 0 0 1 0-8 7 7 0 0 1 13.9-1A4 4 0 0 1 22 20" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+  </svg>
+</div>
             <div class="pwa-device-name" style="color:#fff">Hors-ligne</div>
             <div class="pwa-device-desc" style="color:rgba(255,255,255,.7)" data-fr="Fonctionne sans connexion. Synchronisation automatique au retour." data-en="Works offline. Automatic sync when back online.">Fonctionne sans connexion. Sync automatique au retour.</div>
           </div>
@@ -789,6 +1118,23 @@ document.querySelectorAll('.metier-card, .feat, .pricing-card, .pwa-device-card,
   el.style.transition = 'opacity .5s ease ' + (i * 0.06) + 's, transform .5s ease ' + (i * 0.06) + 's';
   observer.observe(el);
 });
+
+function showDevice(device) {
+  ['iphone','android','desktop'].forEach(function(d) {
+    document.getElementById('panel-'+d).style.display = d===device ? 'block' : 'none';
+    document.getElementById('tab-'+d).classList.toggle('active', d===device);
+  });
+}
+
+function notifyMe() {
+  var email = document.getElementById('notify-email').value;
+  if (!email || !email.includes('@')) {
+    alert('Veuillez entrer une adresse email valide.');
+    return;
+  }
+  document.querySelector('.store-notify').innerHTML =
+    '<div style="color:var(--blue);font-weight:600;font-size:14px;padding:12px">✓ Merci ! Nous vous préviendrons dès la sortie sur les stores.</div>';
+}
 </script>
 </body>
 </html>
